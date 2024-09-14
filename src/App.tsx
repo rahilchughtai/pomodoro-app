@@ -7,8 +7,8 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-// import useSound from 'use-sound';
-// import rewardSfx from '../src/assets/sounds/reward.mp3'
+import useSound from 'use-sound';
+import rewardSfx from '../src/assets/sounds/reward.mp3'
 
 const theme: Theme = createTheme({
   typography: {
@@ -85,8 +85,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  // const [play] = useSound(rewardSfx);
+  const [play] = useSound(rewardSfx);
 
 
   const [pomoState, pomoDispatch] = useReducer(pomodoroReducer, initialPomoDoroState);
@@ -132,6 +131,12 @@ function App() {
     }
   }, [stopped, startCountdown, stopCountdown]);
 
+  useEffect(() => {
+    if (count === 0) {
+      play()
+    }
+
+  }, [count,play])
 
 
   const minutes = secondsToMinutesDisplay(count)
@@ -161,54 +166,69 @@ function App() {
     formDispatch(initialPomoDoroState)
   }
 
+  const handleFormNumberChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> ) => {
+    if (parseInt(e.target.value) <= 0
+      || parseInt(e.target?.value) > 300) {
+      return
+    }
+    formDispatch({
+      pomoDoroAmountMinutes: parseInt(e.target.value)
+    })
+  }
+
 
 
   return (
     <ThemeProvider theme={theme} >
       <CssBaseline />
       <Box mt='.8em' mb='1em'  >
-        <Typography className='lazy-dog' color='textPrimary' variant='h1' textAlign='center' >
+        <Typography color='textPrimary' variant='h1' textAlign='center' >
           Pomodoro Study
         </Typography>
-        <Typography className='lazy-dog' textAlign='center' variant='h6'>
+        <Typography textAlign='center' variant='h6'>
           By Ray
         </Typography>
       </Box>
-      <Box style={{ marginTop: '1.5em' }} >
-        <Typography margin='.5em 0em' color='success' variant='h5' textAlign='center'>
-          Start Studying Effectively!
-        </Typography>
-        <Stack margin='auto' maxWidth='40%' direction={{ xs: 'column', sm: 'row', md: 'row' }} justifyContent='center' spacing={1}>
-          <Chip onClick={() => changeMode('pomodoro')} style={{ fontSize: '1.5em', padding: '.4em' }} clickable variant={currentMode === 'pomodoro' ? 'filled' : 'outlined'} label="pomodoro" color="primary" />
-          <Chip onClick={() => changeMode('short_break')} style={{ fontSize: '1.5em', padding: '.4em' }} clickable variant={currentMode === 'short_break' ? 'filled' : 'outlined'} label="short break" color="primary" />
-          <Chip onClick={() => changeMode('long_break')} style={{ fontSize: '1.5em', padding: '.4em' }} clickable variant={currentMode === 'long_break' ? 'filled' : 'outlined'} label="long break" color="primary" />
-        </Stack>
-        <Typography fontSize='4em' margin='.8em' variant='h1' textAlign='center'>
-          {minutes}:{seconds}
-        </Typography>
-        <Box margin='1.5em auto' sx={{ maxWidth: '30%' }}>
-          <LinearProgress
-            color={currentProgress < 60 ? 'primary' : 'success'}
-            variant="determinate" value={currentProgress} />
-        </Box>
-        <Box
-          marginX='auto' marginBottom='2em'  maxWidth='40%' flexDirection={{ xs: 'column', sm: 'row', md: 'row' }}
-          gap='1em' justifyContent='center' display='flex' textAlign='center'>
+      <div className="center-vertically">
+        <Box style={{ marginTop: '1.5em' }} >
+          <Typography margin='.5em 0em' color='success' variant='h4' textAlign='center'>
+            Start Studying Effectively!
+          </Typography>
+          <Stack margin='auto' maxWidth='40%' direction={{ xs: 'column', sm: 'row', md: 'row' }} justifyContent='center' spacing={1}>
+            <Chip onClick={() => changeMode('pomodoro')} style={{ fontSize: '1.5em', padding: '.4em' }} clickable variant={currentMode === 'pomodoro' ? 'filled' : 'outlined'} label="pomodoro" color="primary" />
+            <Chip onClick={() => changeMode('short_break')} style={{ fontSize: '1.5em', padding: '.4em' }} clickable variant={currentMode === 'short_break' ? 'filled' : 'outlined'} label="short break" color="primary" />
+            <Chip onClick={() => changeMode('long_break')} style={{ fontSize: '1.5em', padding: '.4em' }} clickable variant={currentMode === 'long_break' ? 'filled' : 'outlined'} label="long break" color="primary" />
+          </Stack>
+          <Box marginY="2em" >
+            <Typography fontSize='4em' variant='h1' textAlign='center'>
+              {minutes}:{seconds}
+            </Typography>
+            <Box marginBottom='1em' marginX="auto" sx={{ maxWidth: '40%' }}>
+              <LinearProgress
+                color={currentProgress < 60 ? 'primary' : 'success'}
+                variant="determinate" value={currentProgress} />
+            </Box>
+          </Box>
 
-          <Button onClick={startPauseHandler} size='large' variant='contained' >
-            {StartStopButtonIcon}
-          </Button>
+          <Box
+            marginX='auto' marginBottom='2em' maxWidth='40%' flexDirection={{ xs: 'column', sm: 'row', md: 'row' }}
+            gap='1em' justifyContent='center' display='flex' textAlign='center'>
 
-          <Button
-            onClick={resetHandler} size='large' variant='contained' >
-            <RestartAltIcon />
-          </Button>
-          <Button
-            onClick={handleOpen} size='large' variant='contained' >
-            <SettingsIcon />
-          </Button>
+            <Button onClick={startPauseHandler} size='large' variant='contained' >
+              {StartStopButtonIcon}
+            </Button>
+
+            <Button
+              onClick={resetHandler} size='large' variant='contained' >
+              <RestartAltIcon />
+            </Button>
+            <Button
+              onClick={handleOpen} size='large' variant='contained' >
+              <SettingsIcon />
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      </div>
 
 
       <Modal
@@ -218,9 +238,7 @@ function App() {
         aria-describedby="modal-modal-description"
       >
         <Stack gap='1em' direction='column' sx={style} >
-          <TextField onChange={(e) => formDispatch({
-            pomoDoroAmountMinutes: parseInt(e.target.value)
-          })} value={formState.pomoDoroAmountMinutes} type='number' label="Pomodoro Time" variant="outlined" />
+          <TextField onChange={(e) => handleFormNumberChange(e)} value={formState.pomoDoroAmountMinutes} type='number' label="Pomodoro Time" variant="outlined" />
           <TextField
             onChange={(e) => formDispatch({
               shortBreakAmountMinutes: parseInt(e.target.value)
@@ -248,8 +266,8 @@ function App() {
           </Stack>
         </Stack>
       </Modal>
-
     </ThemeProvider >
+
   )
 }
 
