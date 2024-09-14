@@ -174,7 +174,7 @@ function App() {
           By Ray
         </Typography>
       </Box>
-      <Box style={{ marginTop: '4em' }} >
+      <Box style={{ marginTop: '1.5em' }} >
         <Typography margin='.5em 0em' color='success' variant='h4' textAlign='center'>
           Start Studying Effectively!
         </Typography>
@@ -183,16 +183,16 @@ function App() {
           <Chip onClick={() => changeMode('short_break')} style={{ fontSize: '1.5em', padding: '.4em' }} clickable variant={currentMode === 'short_break' ? 'filled' : 'outlined'} label="short break" color="primary" />
           <Chip onClick={() => changeMode('long_break')} style={{ fontSize: '1.5em', padding: '.4em' }} clickable variant={currentMode === 'long_break' ? 'filled' : 'outlined'} label="long break" color="primary" />
         </Stack>
-        <Typography fontSize='4em' margin='1em' variant='h1' textAlign='center'>
+        <Typography fontSize='4em' margin='.8em' variant='h1' textAlign='center'>
           {minutes}:{seconds}
         </Typography>
-        <Box margin='2em auto' sx={{ maxWidth: '30%' }}>
+        <Box margin='1.5em auto' sx={{ maxWidth: '30%' }}>
           <LinearProgress
             color={currentProgress < 60 ? 'primary' : 'success'}
             variant="determinate" value={currentProgress} />
         </Box>
         <Box
-          margin='auto' maxWidth='40%' flexDirection={{ xs: 'column', sm: 'row', md: 'row' }}
+          marginX='auto' marginBottom='2em'  maxWidth='40%' flexDirection={{ xs: 'column', sm: 'row', md: 'row' }}
           gap='1em' justifyContent='center' display='flex' textAlign='center'>
 
           <Button onClick={startPauseHandler} size='large' variant='contained' >
