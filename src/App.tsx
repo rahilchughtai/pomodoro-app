@@ -14,7 +14,7 @@ const theme: Theme = createTheme({
   typography: {
     fontFamily: 'Lazy Dog',
     h1: {
-      fontSize: '4em',
+      fontSize: '3rem',
       color: 'textPrimary'
     },
     h6: {
@@ -168,14 +168,14 @@ function App() {
       <CssBaseline />
       <Box mt='.8em' mb='1em'  >
         <Typography className='lazy-dog' color='textPrimary' variant='h1' textAlign='center' >
-          Pomodoro Study App
+          Pomodoro Study
         </Typography>
         <Typography className='lazy-dog' textAlign='center' variant='h6'>
           By Ray
         </Typography>
       </Box>
       <Box style={{ marginTop: '1.5em' }} >
-        <Typography margin='.5em 0em' color='success' variant='h4' textAlign='center'>
+        <Typography margin='.5em 0em' color='success' variant='h5' textAlign='center'>
           Start Studying Effectively!
         </Typography>
         <Stack margin='auto' maxWidth='40%' direction={{ xs: 'column', sm: 'row', md: 'row' }} justifyContent='center' spacing={1}>
