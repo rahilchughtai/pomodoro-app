@@ -1,10 +1,14 @@
 import { useEffect, useReducer, useState } from 'react'
 import './App.css'
-import { Box, Button, Chip, createTheme, CssBaseline, Modal, Stack, TextField, Theme, ThemeProvider, Typography } from '@mui/material';
+import { Box, Button, Chip, createTheme, CssBaseline, LinearProgress, Modal, Stack, TextField, Theme, ThemeProvider, Typography } from '@mui/material';
 import { useCountdown } from 'usehooks-ts';
 import { secondsDisplay, secondsToMinutesDisplay } from './utils/timeUtils';
-
-
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
+// import useSound from 'use-sound';
+// import rewardSfx from '../src/assets/sounds/reward.mp3'
 
 const theme: Theme = createTheme({
   typography: {
@@ -82,6 +86,9 @@ function App() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  // const [play] = useSound(rewardSfx);
+
+
   const [pomoState, pomoDispatch] = useReducer(pomodoroReducer, initialPomoDoroState);
   const {
     currentMode,
@@ -130,7 +137,9 @@ function App() {
   const minutes = secondsToMinutesDisplay(count)
   const seconds = secondsDisplay(count)
 
-  const StartStopButtonText = stopped ? 'Start' : 'Pause'
+  const currentProgress = 100 - (count / (currentCount * 60)) * 100
+
+  const StartStopButtonIcon = stopped ? <PlayArrowIcon /> : <StopIcon />
 
   const changeMode = (mode: pomodoroMode) => {
     pomoDispatch({ currentMode: mode })
@@ -157,7 +166,7 @@ function App() {
   return (
     <ThemeProvider theme={theme} >
       <CssBaseline />
-      <Box mt='4em' mb='1em'  >
+      <Box mt='.8em' mb='1em'  >
         <Typography className='lazy-dog' color='textPrimary' variant='h1' textAlign='center' >
           Pomodoro Study App
         </Typography>
@@ -177,19 +186,26 @@ function App() {
         <Typography fontSize='4em' margin='1em' variant='h1' textAlign='center'>
           {minutes}:{seconds}
         </Typography>
-
+        <Box margin='2em auto' sx={{ maxWidth: '30%' }}>
+          <LinearProgress
+            color={currentProgress < 60 ? 'primary' : 'success'}
+            variant="determinate" value={currentProgress} />
+        </Box>
         <Box
-
           margin='auto' maxWidth='40%' flexDirection={{ xs: 'column', sm: 'row', md: 'row' }}
           gap='1em' justifyContent='center' display='flex' textAlign='center'>
+
           <Button onClick={startPauseHandler} size='large' variant='contained' >
-            {StartStopButtonText}
+            {StartStopButtonIcon}
           </Button>
-          <Button onClick={resetHandler} size='large' variant='contained' >
-            Reset
+
+          <Button
+            onClick={resetHandler} size='large' variant='contained' >
+            <RestartAltIcon />
           </Button>
-          <Button onClick={handleOpen} size='large' variant='contained' >
-            Settings
+          <Button
+            onClick={handleOpen} size='large' variant='contained' >
+            <SettingsIcon />
           </Button>
         </Box>
       </Box>
